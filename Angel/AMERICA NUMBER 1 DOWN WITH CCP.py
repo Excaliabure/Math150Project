@@ -5,7 +5,7 @@ import datetime as dt
 import math as m
 import sklearn.linear_model as sk
 import sklearn.tree as skt
-
+# nice car
 
 with open('/Users/angelgonzalezguevara/Downloads/pswrgvwall.csv','r') as file:
     reader = csv.reader(file)
