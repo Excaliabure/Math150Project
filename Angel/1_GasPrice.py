@@ -12,7 +12,7 @@ with open('/Users/angelgonzalezguevara/Downloads/pswrgvwall.csv','r') as file:
     next(reader)
     next(reader)
     next(reader)
-    
+    next(reader)
     x=[]
     x2=[]
     xdat =[]
@@ -23,11 +23,13 @@ with open('/Users/angelgonzalezguevara/Downloads/pswrgvwall.csv','r') as file:
     x.pop()
     x2.pop()
 
-with open('/Users/angelgonzalezguevara/Documents/Crude Oil/Data 1-Table 1.csv','r') as file:
+with open('/Users/angelgonzalezguevara/Documents/Crude Oil'
+          '/Data 1-Table 1.csv','r') as file:
     reader = csv.reader(file)
-    print(next(reader))
-    print(next(reader))
-    print(next(reader))
+    next(reader)
+    next(reader)
+    next(reader)
+    next(reader)
     xdates = []
     xBarPr = []
     for row in reader:
@@ -51,11 +53,14 @@ rsqu = sk.LinearRegression().fit(datesforR2,x2int).score(datesforR2,x2int)
 
 xgasp =[]
 xcrudep = []
+dateforGasprice =[]
+dateforCrPrice=[]
 for i in range(len(dates)):
     if dates[i] == datesforCr[i]:
         continue
     xgasp.append(x2int[i])
     xcrudep.append(x2Cr[i])
+    dateforGasprice.append(dates[i])
 
 
 plt.subplot(1,4,1)
@@ -63,11 +68,8 @@ plt.scatter(dates, x2int,s=[5])
 plt.plot(dates,ypred,color='red')
 plt.title('Price of Gas (1994'+ '-Present), R^='+str(np.round(rsqu,2)))
 plt.subplot(1,4,2)
-plt.scatter(datesforCr, x2Cr,s=[5])
+plt.plot(datesforCr, x2Cr)
 plt.xlabel('Date')
-plt.subplot(1,4,3)
-plt.scatter(xcrudep, xgasp,s=[5])
-plt.grid(True)
 
 # cluster
 X = []
@@ -80,12 +82,54 @@ for i,j in zip(xcrudepr,xgaspr):
     X.append([i,j])
 
 
-kmeans = skc.KMeans(n_clusters=5).fit(X)
-ykmean = skc.KMeans(n_clusters=5).fit(X).predict(X)
+kmeans = skc.KMeans(n_clusters=3).fit(X)
+ykmean = skc.KMeans(n_clusters=3).fit(X).predict(X)
 crudeoilprices = [price[0] for price in X]
 gasprices = [price[1] for price in X]
 
+
+crudeoilprices = [price[0] for price in X]
+gasprices = [price[1] for price in X]
+
+
+# EMA
+ema = []
+pre_ema = xcrudepr[0]
+EMA = lambda a, x: a * x + (1-a) + pre_ema
+
+for i in list(range(len(xcrudepr))):
+    ema_ = EMA(.2,xcrudepr[i])
+    pre_ema = ema_
+    ema.append(ema_)
+
+
+
+
 # Show plot
+plt.subplot(1,4,3)
+plt.scatter(dateforGasprice,gasprices,s=[5])
+plt.scatter(dateforGasprice,crudeoilprices,s=[5])
 plt.subplot(1,4,4)
-plt.scatter(crudeoilprices,gasprices, c = ykmean)
+plt.scatter(crudeoilprices,gasprices)
 plt.show()
+
+
+with open('/Users/angelgonzalezguevara/Documents/import(supply)ofCrudeOil'
+          '/Data 1-Table 1.csv','r') as file:
+    reader = csv.reader(file)
+    next(reader)
+    next(reader)
+    next(reader)
+    xdate = []
+    ximport = []
+    for row in reader:
+        xdate.append(row[0])
+        ximport.append(row[1])
+    xdate.pop()
+    ximport.pop()
+
+
+
+dates = [dt.datetime.strptime(date, '%b %d, %Y') for date in xdate]
+
+
