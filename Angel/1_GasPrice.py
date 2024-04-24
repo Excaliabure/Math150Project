@@ -89,27 +89,42 @@ for i,j in zip(xcrudepr,xgaspr):
     X.append([i,j])
 
 
-kmeans = skc.KMeans(n_clusters=3).fit(X)
-ykmean = skc.KMeans(n_clusters=3).fit(X).predict(X)
-crudeoilprices = [price[0] for price in X]
-gasprices = [price[1] for price in X]
+
+crudeoilprices = [price[0] for price in X] # 
+gasprices = [price[1]*10 for price in X]
 
 
-crudeoilprices = [price[0] for price in X]
-gasprices = [price[1] for price in X]
-
-
-# EMA
-ema = []
+# 50 EMA
+ema250 = []
+ema50 =[]
+ema10=[]
 pre_ema = xcrudepr[0]
-EMA = lambda a, x: a * x + (1-a)* pre_ema
+pre_ema1 = xcrudepr[0]
+pre_ema2 = xcrudepr[0]
+EMA250 = lambda a, x: a * x + (1-a)* pre_ema
 
+EMA50 = lambda a, x: a * x + (1-a)* pre_ema1
+
+EMA10 = lambda a, x: a * x + (1-a)* pre_ema2
 
 for i in list(range(len(xcrudepr))):
+    if i % 250 == 0:
+        pre_ema=xcrudepr[i]
+    if i % 50 == 0:
+        pre_ema1=xcrudepr[i]
+    if i % 10 == 0:
+        pre_ema2 = xcrudepr[i]
     s = 2/(len(list(range(len(xcrudepr)))) + 1)
-    ema_ = EMA(s,xcrudepr[i])
+    
+    ema_ = EMA250(s,xcrudepr[i])
+    ema1_ = EMA50(s,xcrudepr[i])
+    ema2_ = EMA10(s,xcrudepr[i])
     pre_ema = ema_
-    ema.append(ema_)
+    pre_ema1 = ema1_
+    pre_ema2 = ema2_
+    ema250.append(ema_)
+    ema50.append(ema1_)
+    ema10.append(ema2_)
     
 
 
@@ -118,9 +133,12 @@ for i in list(range(len(xcrudepr))):
 plt.subplot(1,4,3)
 plt.scatter(dateforGasprice,gasprices,s=[5])
 plt.scatter(dateforGasprice,crudeoilprices,s=[5])
-plt.subplot(1,4,4)
-plt.plot(datesforCr, x2Cr)
-plt.plot(datesforCr,ema)
+plt.figure()
+plt.plot(datesforCr, x2Cr, linewidth = 2,  color = 'black',label='Price',linestyle = '--')
+plt.plot(datesforCr,ema250, linewidth = 1, color = 'red',label='250 ema')
+plt.plot(datesforCr,ema50,linewidth = 1, color='blue',label = '50 ema')
+plt.plot(datesforCr,ema10,linewidth = 1, color='m',label = '10 ema')
+plt.legend()
 plt.show()
 
 
