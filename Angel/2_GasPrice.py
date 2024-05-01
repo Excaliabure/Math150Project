@@ -51,6 +51,34 @@ with open('/Users/angelgonzalezguevara/Documents/Crude Oil'
 
 dates = [dt.datetime.strptime(date, '%b %d, %Y') for date in xdate]
 ximport = [float(i) for i in ximport]
-pl.plot(dates,ximport)
-pl.title('barel vs tim')
-pl.show()
+
+my_list = [ 5, 6,7]
+for i in range(7, 0, -1):  # Loop in reverse to append to the beginning
+    my_list.insert(0, i)
+print(my_list)  # Output: [1, 2, 3, 4, 5, 6]
+
+
+# Initialize an empty dictionary
+my_dict = {}
+
+# Define the range for the loop
+start = 1
+end = 10
+
+# Assuming you have a dictionary named 'my_dict'
+my_dict = {'key_1': 1, 'key_2': 2, 'key_3': 3}
+
+# Specify the value you are searching for
+value_to_find = 2
+
+# Iterate over the dictionary keys and check for the value
+for key in my_dict:
+    if my_dict[key] == value_to_find:
+        print("The key corresponding to the value", value_to_find, "is:", key)
+        break  # Exit the loop once the key is found
+
+# If the value is not found in the dictionary
+else:
+    print("Value", value_to_find, "not found in the dictionary.")
+
+
