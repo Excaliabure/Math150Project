@@ -92,7 +92,7 @@ for i,j in zip(xcrudepr,xgaspr):
 
 
 crudeoilprices = [price[0] for price in X] # 
-gasprices = [price[1]*9.8 for price in X]
+gasprices = [price[1]* 7 for price in X]
 
 
 # 50 and 200 EMA
@@ -168,7 +168,7 @@ maxofp = []
 dates_ = [dt.datetime.strptime(date, '%b %d, %Y').timestamp() for date in xdate]
 
 
-for i in range(1,31):
+for i in range(1,56):
     shift = []
 
     shift = x2Cr[:i].tolist()
@@ -193,71 +193,15 @@ for i in range(1,31):
 
 ################################
 
-maxofp1 = []
-ximportp = []
-xgasp = []
-for i in range(len(dates)):
-    if xdate[i] != dates[i]:
-        xgasp.append(x2int[i])
-        ximportp.append(ximport[i])
-        
-
-
-
-for i in range(1,31):
-    shift = []
-
-    shift = ximportp[:i]
-    
-    ximportp = shift + ximportp
-    ximportp = ximportp[:-i]
-
-    xgasp = np.array(xgasp).reshape(-1,1)
-    ximportp = np.array(ximportp).reshape(-1,1)
-    corrcoeff = sk.LinearRegression().fit(xgasp,ximportp).score(xgasp,ximportp)
-
-    xgasp = xgasp.tolist()
-    ximportp = ximportp.tolist()
-
-    xgasp = [item for sublist in xgasp for item in sublist]
-    ximportp = [item for sublist in ximportp for item in sublist]
-
-    xgasp = xgasp[i:]
-    ximportp = ximportp[i:]
-
-    maxofp1.append(corrcoeff)
-
-
 
 
 ## Finding days and shift for Corr. Coeff.
 corr = max(maxofp)
-
+# befro shuft
+print(f"p = {maxofp[0]} for curde oil without a shift of {maxofp.index(maxofp[0])}")
 
 print(f"p = {max(maxofp)} for curde oil with a shift of {maxofp.index(max(maxofp))} " )
-print(f"p = {max(maxofp1)} for for import with a shift of {maxofp1.index(max(maxofp1))}" )
 
 ####################
 
 
-# ximp = np.array(ximp).reshape(1,-1)
-
-
-# corrcoeff = sk.LinearRegression().fit(xgasp,ximp).score(xgasp,ximp)
-# print(corrcoeff)
-
-## Stochas. 
-
-# def stochastic(start,volitility,probability_coef,iterations):
-#     arr = np.zeros(iterations)
-
-#     initial = start
-#     for i in range(len(arr)):
-#         r = random.random()
-#         if r < probability_coef:
-#             initial += volitility * (random.random() + 1)
-#         else:
-#             initial -= volitility * (random.random() + 1)
-
-#         arr[i] = initial
-#     return arr

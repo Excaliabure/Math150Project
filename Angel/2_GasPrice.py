@@ -60,7 +60,7 @@ from sklearn.linear_model import LinearRegression
 
 # True data
 x = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)
-true_y = np.array([2.5, 4, 6.5, 8, 10])
+true_y = np.array([2.5, 4, 6.5, 8.75, 10])
 
 # Fit linear regression model
 model = LinearRegression()
@@ -80,7 +80,8 @@ plt.plot(x, predicted_y, color='red', label='Linear Regression Line')
 
 # Plot the residuals (errors)
 for i in range(len(x)):
-    plt.plot([x[i], x[i]], [true_y[i], predicted_y[i]], color='gray', linestyle='--')
+    # plt.plot([x[i], x[i]], [true_y[i], predicted_y[i]], color='gray', linestyle='--')
+    plt.plot([x[i], x[i]], [predicted_y[i], predicted_y[i] + residuals[i]], color='green', linestyle='-')
 
 # Add labels and title
 plt.xlabel('X-axis')
