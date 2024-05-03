@@ -92,7 +92,7 @@ for i,j in zip(xcrudepr,xgaspr):
 
 
 crudeoilprices = [price[0] for price in X] # 
-gasprices = [price[1]*10.6 for price in X]
+gasprices = [price[1]*9.8 for price in X]
 
 
 # 50 and 200 EMA
@@ -131,8 +131,9 @@ datesforCr = [dt.datetime.strptime(date, '%b %d, %Y') for date in xdates]
 
 # Show plot
 plt.figure()
-plt.scatter(dateforGasprice,gasprices,s=[5])
-plt.scatter(dateforGasprice,crudeoilprices,s=[5])
+plt.plot(dateforGasprice,gasprices, label = "Gas Price (scaled up 10x)")
+plt.plot(dateforGasprice,crudeoilprices,label = "Crude Oil Price")
+plt.legend()
 plt.figure()
 plt.title("Crude Oil Prices(1994-Present)")
 plt.xlabel("Time")
@@ -159,57 +160,85 @@ with open('/Users/angelgonzalezguevara/Documents/import(supply)ofCrudeOil'
     xdate.pop()
     ximport.pop()
 
+ximport = [float(i) for i in ximport] 
+
 ###########################
 maxofp = []
 
-dictofp = {}
+dates_ = [dt.datetime.strptime(date, '%b %d, %Y').timestamp() for date in xdate]
 
-for i in list(range(1,7)):
-    for j in list(range(1,7)):
-        shift = [j] * i
-        crudeoilprices = shift + crudeoilprices
-        crudeoilprices = crudeoilprices[:-i]
 
-        gasprices = np.array(gasprices).reshape(-1,1)
-        crudeoilprices = np.array(crudeoilprices).reshape(-1,1)
+for i in range(1,31):
+    shift = []
 
-        corrcoeff = sk.LinearRegression().fit(gasprices,crudeoilprices).score(gasprices,crudeoilprices)
+    shift = x2Cr[:i].tolist()
+    shift = [item for sublist in shift for item in sublist]
+    crudeoilprices = shift + crudeoilprices
+    crudeoilprices = crudeoilprices[:-i]
 
-        maxofp.append(corrcoeff)
+    gasprices = np.array(gasprices).reshape(-1,1)
+    crudeoilprices = np.array(crudeoilprices).reshape(-1,1)
+    corrcoeff = sk.LinearRegression().fit(gasprices,crudeoilprices).score(gasprices,crudeoilprices)
 
-        dictofp[f'day = {j}'] = corrcoeff
+    gasprices = gasprices.tolist()
+    crudeoilprices = crudeoilprices.tolist()
 
-        gasprices = gasprices.tolist()
-        crudeoilprices = crudeoilprices.tolist()
+    gasprices = [item for sublist in gasprices for item in sublist]
+    crudeoilprices = [item for sublist in crudeoilprices for item in sublist]
 
-        gasprices = [item for sublist in gasprices for item in sublist]
-        crudeoilprices = [item for sublist in crudeoilprices for item in sublist] 
+    gasprices = gasprices[i:]
+    crudeoilprices = crudeoilprices[i:]
+
+    maxofp.append(corrcoeff)
+
+################################
+
+maxofp1 = []
+ximportp = []
+xgasp = []
+for i in range(len(dates)):
+    if xdate[i] != dates[i]:
+        xgasp.append(x2int[i])
+        ximportp.append(ximport[i])
+        
+
+
+
+for i in range(1,31):
+    shift = []
+
+    shift = ximportp[:i]
+    
+    ximportp = shift + ximportp
+    ximportp = ximportp[:-i]
+
+    xgasp = np.array(xgasp).reshape(-1,1)
+    ximportp = np.array(ximportp).reshape(-1,1)
+    corrcoeff = sk.LinearRegression().fit(xgasp,ximportp).score(xgasp,ximportp)
+
+    xgasp = xgasp.tolist()
+    ximportp = ximportp.tolist()
+
+    xgasp = [item for sublist in xgasp for item in sublist]
+    ximportp = [item for sublist in ximportp for item in sublist]
+
+    xgasp = xgasp[i:]
+    ximportp = ximportp[i:]
+
+    maxofp1.append(corrcoeff)
+
+
 
 
 ## Finding days and shift for Corr. Coeff.
 corr = max(maxofp)
-for key in dictofp:
-    keyss = dictofp[key]
-    if keyss == corr:
-        print(key)
-        break
-   
 
 
-dates_ = [dt.datetime.strptime(date, '%b %d, %Y').timestamp() for date in xdate]
-
-print(max(maxofp))
-
+print(f"p = {max(maxofp)} for curde oil with a shift of {maxofp.index(max(maxofp))} " )
+print(f"p = {max(maxofp1)} for for import with a shift of {maxofp1.index(max(maxofp1))}" )
 
 ####################
 
-
-ximp =[]
-for i in range(len(dates)):
-    if dates[i] == dates_[i]:
-        xgasp.append(x2int[i])
-        ximp.append(ximport[i])
-        dateforGasprice.append(dates[i])
 
 # ximp = np.array(ximp).reshape(1,-1)
 
