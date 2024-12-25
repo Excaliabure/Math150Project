@@ -1,7 +1,4 @@
-Math 150 project
-
-LONG LIVE AMERICA OIL #1 CHINA BAD DOWN WITH THE CCP 
-
+Math 150 project for analysis of crude oil prices
 
 Dependancies
 
