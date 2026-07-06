@@ -1,5 +1,8 @@
-Math 150 project for analysis of crude oil prices
+# About
 
-Dependancies
+Math 150 project for analysis of crude oil prices employing various Mathmatical modeling techniques.
 
-pip install numpy pandas scikit-sklearn
+
+# Status
+
+Complete
